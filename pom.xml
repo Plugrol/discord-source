@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<!--
+  ~  Copyright 14.07.2022 KissenPvP
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -19,19 +35,109 @@
         <maven.compiler.target>18</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <!-- create libs folder -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.directory}/libs
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- create jar file -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>libs/</classpathPrefix>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!-- create jar file with dependencies -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- create jar with the only needed dependencies, because it is not provided in the minecraft server system -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.MF</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>api</shadedClassifierName>
+                            <artifactSet>
+                                <includes>
+                                    <include>de.kissenpvp:discord-api</include>
+                                    <include>org.javacord:javacord-api</include>
+                                </includes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>de.kissenpvp</groupId>
             <artifactId>discord-api</artifactId>
             <version>1.0.0</version>
-        </dependency>
-
-        <!--suppress VulnerableLibrariesLocal -->
-        <dependency>
-            <groupId>org.javacord</groupId>
-            <artifactId>javacord</artifactId>
-            <version>3.5.0</version>
-            <type>pom</type>
         </dependency>
 
         <!--suppress VulnerableLibrariesLocal -->
