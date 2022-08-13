@@ -46,7 +46,8 @@ import java.util.List;
  * @author Taubsie
  * @since 1.0.0
  */
-public class KissenBot implements Bot {
+public class KissenBot implements Bot
+{
     private DiscordApi bot;
     @Getter
     private boolean connected;
@@ -55,7 +56,8 @@ public class KissenBot implements Bot {
     private List<SlashCommandDescription> slashCommandDescriptions;
 
     @Override
-    public boolean preStart() {
+    public boolean preStart()
+    {
         connected = false;
         if (!Kissen.getInstance()
                 .getImplementation(Configuration.class)
@@ -96,7 +98,8 @@ public class KissenBot implements Bot {
     }
 
     @Override
-    public void stop() {
+    public void stop()
+    {
 
         if (bot == null) {
             return;
@@ -111,24 +114,28 @@ public class KissenBot implements Bot {
     }
 
     @Override
-    public void restart() {
+    public void restart()
+    {
         stop();
         start();
     }
 
     @Deprecated(since = "1.0.0")
     @Override
-    public void reloadBot() {
+    public void reloadBot()
+    {
 
     }
 
     @Override
-    public void reloadConfig() {
+    public void reloadConfig()
+    {
 
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isEnabled()
+    {
         return Kissen.getInstance().getImplementation(Configuration.class).getSetting(BotEnabled.class);
     }
 
@@ -138,7 +145,8 @@ public class KissenBot implements Bot {
     }
 
     @Override
-    public Server getServer() {
+    public Server getServer()
+    {
         if (!isEnabled() || !isConnected() || getServerID() == (new ServerID().getDefault())) {
             return null;
         }
@@ -147,13 +155,15 @@ public class KissenBot implements Bot {
     }
 
     @Override
-    public void registerListener(GloballyAttachableListener globallyAttachableListener) {
+    public void registerListener(GloballyAttachableListener globallyAttachableListener)
+    {
         bot.addListener(globallyAttachableListener);
     }
 
 
     @Override
-    public void addCommand(SlashCommandDescription slashCommandDescription) {
+    public void addCommand(SlashCommandDescription slashCommandDescription)
+    {
 
         if (slashCommandDescriptions == null) {
             slashCommandDescriptions = new ArrayList<>();
