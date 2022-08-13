@@ -28,31 +28,36 @@ import de.kissenpvp.discord.api.command.SlashCommandDescription;
  * @author Taubsie
  * @since 1.0.0
  */
-public class DiscordCommandLoader implements Loadable {
+public class DiscordCommandLoader implements Loadable
+{
     @Override
-    public boolean isLoadable(ReflectionClass reflectionClass, KissenPlugin kissenPlugin) {
+    public boolean isLoadable(ReflectionClass reflectionClass, KissenPlugin kissenPlugin)
+    {
         return Kissen.getInstance().getImplementation(Bot.class).isEnabled() && reflectionClass.getJavaClass().getAnnotation(DiscordCommand.class) != null && !reflectionClass.isAbstract();
     }
 
     @Override
-    public void load(ReflectionClass reflectionClass, KissenPlugin kissenPlugin) {
-
-        Kissen.getInstance().getImplementation(Bot.class).addCommand(new SlashCommandDescription() {
+    public void load(ReflectionClass reflectionClass, KissenPlugin kissenPlugin)
+    {
+        Kissen.getInstance().getImplementation(Bot.class).addCommand(new SlashCommandDescription()
+        {
             @Override
-            public DiscordCommand getCommandInfo() {
-                return reflectionClass.getJavaClass()
-                        .getAnnotation(DiscordCommand.class);
+            public DiscordCommand getCommandInfo()
+            {
+                return reflectionClass.getJavaClass().getAnnotation(DiscordCommand.class);
             }
 
             @Override
-            public SlashCommand getExecutable() {
+            public SlashCommand getExecutable()
+            {
                 return (SlashCommand) reflectionClass.newInstance();
             }
         });
     }
 
     @Override
-    public void enable(ReflectionClass reflectionClass, KissenPlugin kissenPlugin) {
+    public void enable(ReflectionClass reflectionClass, KissenPlugin kissenPlugin)
+    {
         /* Ignored */
     }
 }

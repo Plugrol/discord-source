@@ -26,18 +26,19 @@ import org.javacord.api.listener.GloballyAttachableListener;
  * @author Taubsie
  * @since 1.0.0
  */
-public class ListenerLoader implements Loadable {
-    @Override
-    public boolean isLoadable(ReflectionClass reflectionClass, KissenPlugin kissenPlugin) {
+public class ListenerLoader implements Loadable
+{
+    @Override public boolean isLoadable(ReflectionClass reflectionClass, KissenPlugin kissenPlugin)
+    {
         return Kissen.getInstance().getImplementation(Bot.class).isEnabled() && GloballyAttachableListener.class.isAssignableFrom(reflectionClass.getJavaClass());
     }
 
-    @Override
-    public void load(ReflectionClass reflectionClass, KissenPlugin kissenPlugin) {
+    @Override public void load(ReflectionClass reflectionClass, KissenPlugin kissenPlugin)
+    {
     }
 
-    @Override
-    public void enable(ReflectionClass reflectionClass, KissenPlugin kissenPlugin) {
+    @Override public void enable(ReflectionClass reflectionClass, KissenPlugin kissenPlugin)
+    {
         Kissen.getInstance().getImplementation(Bot.class).registerListener((GloballyAttachableListener) reflectionClass.getInstance());
     }
 }

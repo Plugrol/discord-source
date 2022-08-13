@@ -1,20 +1,17 @@
 /*
- * KissenEssentials
- * Copyright (C) KissenEssentials team and contributors.
+ *  Copyright 14.07.2022 KissenPvP
  *
- * This program is free software and is free to redistribute
- * and/or modify under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option)
- * any later version.
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * This program is intended for the purpose of joy,
- * WITHOUT WARRANTY without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Lesser General Public License for more details.
+ *        http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package de.kissenpvp.discord.language;
 
@@ -43,6 +40,6 @@ public class InvalidToken implements Sentence
 
     @Override public String getDefault()
     {
-        return "Please enter a valid token in the configuration.";
+        return "Please enter a valid discord token in the configuration.";
     }
 }

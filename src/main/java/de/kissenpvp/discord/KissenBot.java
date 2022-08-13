@@ -20,11 +20,9 @@ import de.kissenpvp.api.config.Configuration;
 import de.kissenpvp.api.message.language.Languages;
 import de.kissenpvp.discord.api.Bot;
 import de.kissenpvp.discord.api.command.SlashCommandDescription;
-import de.kissenpvp.discord.language.BotDisabled;
 import de.kissenpvp.discord.language.InvalidToken;
 import de.kissenpvp.discord.language.PrepareStart;
 import de.kissenpvp.discord.language.StartedSuccessful;
-import de.kissenpvp.discord.settings.BotEnabled;
 import de.kissenpvp.discord.settings.ServerID;
 import de.kissenpvp.discord.settings.Token;
 import lombok.Getter;
@@ -39,6 +37,7 @@ import org.javacord.api.listener.GloballyAttachableListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * What did you expect?
@@ -49,59 +48,45 @@ import java.util.List;
 public class KissenBot implements Bot
 {
     private DiscordApi bot;
-    @Getter
-    private boolean connected;
+    @Getter private boolean connected;
     private List<SlashCommandBuilder> commands;
-    @Getter
-    private List<SlashCommandDescription> slashCommandDescriptions;
+    @Getter private List<SlashCommandDescription> slashCommandDescriptions;
 
-    @Override
-    public boolean preStart()
+    @Override public boolean preStart()
     {
-        connected = false;
-        if (!Kissen.getInstance()
-                .getImplementation(Configuration.class)
-                .getSetting(BotEnabled.class)) {
-            Kissen.getInstance()
-                    .getInternals()
-                    .system()
-                    .debug(Kissen.getInstance()
-                            .getImplementation(Languages.class)
-                            .getMessage("en_GB", new BotDisabled())
-                            .getText(), null, "discord");
-            return true;
-        }
 
-        String token = Kissen.getInstance().getImplementation(Configuration.class).getSetting(Token.class);
-        if (token.trim().equalsIgnoreCase(new Token().getDefault()) || token.isBlank()) {
+        connected = false;
+
+        if (!isEnabled())
+        {
             Kissen.getInstance().getInternals().system().log(Kissen.getInstance().getImplementation(Languages.class).getMessage("en_GB", new InvalidToken()).getText());
             return true;
         }
 
         Kissen.getInstance().getInternals().system().debug(Kissen.getInstance().getImplementation(Languages.class).getMessage("en_GB", new PrepareStart()).getText(), null, "discord");
 
-        bot = new DiscordApiBuilder().setToken(token).setAllIntents().setWaitForServersOnStartup(true).setWaitForUsersOnStartup(true).login().join();
+        bot = new DiscordApiBuilder().setToken(Kissen.getInstance().getImplementation(Configuration.class).getSetting(Token.class)).setAllIntents().setWaitForServersOnStartup(true).setWaitForUsersOnStartup(true).login().join();
 
         bot.updateActivity(ActivityType.COMPETING, "faster startup times.");
         bot.updateStatus(UserStatus.IDLE);
 
         Kissen.getInstance().getInternals().system().debug(Kissen.getInstance().getImplementation(Languages.class).getMessage("en_GB", new StartedSuccessful()).getText(), null, "discord");
 
-        bot.updateActivity(ActivityType.PLAYING, "▁▂▃▄▅▆ KissenPvP.de ▆▅▄▃▂▁  >Dein Netzwerk für Minispiele. Joine jetzt!<");
-
+        bot.updateActivity(ActivityType.PLAYING, "Tom Clancy's Rainbow Six Siege");
         bot.updateStatus(UserStatus.ONLINE);
 
         bot.bulkOverwriteGlobalApplicationCommands(commands);
 
         connected = true;
+
         return true;
     }
 
-    @Override
-    public void stop()
+    @Override public void stop()
     {
 
-        if (bot == null) {
+        if (bot == null)
+        {
             return;
         }
 
@@ -113,30 +98,26 @@ public class KissenBot implements Bot
         bot.disconnect();
     }
 
-    @Override
-    public void restart()
+    @Override public void restart()
     {
         stop();
         start();
     }
 
-    @Deprecated(since = "1.0.0")
-    @Override
-    public void reloadBot()
+    @Deprecated(since = "1.0.0") @Override public void reloadBot()
     {
 
     }
 
-    @Override
-    public void reloadConfig()
+    @Override public void reloadConfig()
     {
 
     }
 
-    @Override
-    public boolean isEnabled()
+    @Override public boolean isEnabled()
     {
-        return Kissen.getInstance().getImplementation(Configuration.class).getSetting(BotEnabled.class);
+        return !Objects.equals(Kissen.getInstance().getImplementation(Configuration.class).getSetting(Token.class),
+                new Token().getDefault());
     }
 
     private long getServerID()
@@ -144,37 +125,42 @@ public class KissenBot implements Bot
         return Kissen.getInstance().getImplementation(Configuration.class).getSetting(ServerID.class);
     }
 
-    @Override
-    public Server getServer()
+    @Override public Server getServer()
     {
-        if (!isEnabled() || !isConnected() || getServerID() == (new ServerID().getDefault())) {
+        if (!isConnected() || getServerID() == (new ServerID().getDefault()))
+        {
             return null;
         }
 
         return bot.getServerById(getServerID()).orElse(null);
     }
 
-    @Override
-    public void registerListener(GloballyAttachableListener globallyAttachableListener)
+    @Override public void registerListener(GloballyAttachableListener globallyAttachableListener)
     {
-        bot.addListener(globallyAttachableListener);
+        if (isEnabled())
+        {
+            bot.addListener(globallyAttachableListener);
+        }
     }
 
 
-    @Override
-    public void addCommand(SlashCommandDescription slashCommandDescription)
+    @Override public void addCommand(SlashCommandDescription slashCommandDescription)
     {
 
-        if (slashCommandDescriptions == null) {
+        if (slashCommandDescriptions == null)
+        {
             slashCommandDescriptions = new ArrayList<>();
         }
 
         slashCommandDescriptions.add(slashCommandDescription);
 
-        SlashCommandBuilder slashCommandBuilder = org.javacord.api.interaction.SlashCommand.with(slashCommandDescription.getCommandInfo().command(), slashCommandDescription.getCommandInfo().description());
+        SlashCommandBuilder slashCommandBuilder =
+                org.javacord.api.interaction.SlashCommand.with(slashCommandDescription.getCommandInfo().command(),
+                        slashCommandDescription.getCommandInfo().description());
         Arrays.stream(slashCommandDescription.getExecutable().getSlashCommandOptions()).forEach(slashCommandBuilder::addOption);
 
-        if (commands == null) {
+        if (commands == null)
+        {
             commands = new ArrayList<>();
         }
         commands.add(slashCommandBuilder);
