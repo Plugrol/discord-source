@@ -88,7 +88,6 @@ public class KissenBot implements Bot {
         bot.updateActivity(ActivityType.PLAYING, "▁▂▃▄▅▆ KissenPvP.de ▆▅▄▃▂▁  >Dein Netzwerk für Minispiele. Joine jetzt!<");
         bot.updateStatus(UserStatus.ONLINE);
 
-        System.out.println(commands);
         bot.bulkOverwriteGlobalApplicationCommands(commands);
 
         connected = true;
