@@ -86,6 +86,7 @@ public class KissenBot implements Bot {
         Kissen.getInstance().getInternals().system().debug(Kissen.getInstance().getImplementation(Languages.class).getMessage("en_GB", new StartedSuccessful()).getText(), null, "discord");
 
         bot.updateActivity(ActivityType.PLAYING, "▁▂▃▄▅▆ KissenPvP.de ▆▅▄▃▂▁  >Dein Netzwerk für Minispiele. Joine jetzt!<");
+
         bot.updateStatus(UserStatus.ONLINE);
 
         bot.bulkOverwriteGlobalApplicationCommands(commands);
