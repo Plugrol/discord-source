@@ -70,9 +70,9 @@ public class KissenBot implements Bot
         bot.updateActivity(ActivityType.COMPETING, "faster startup times.");
         bot.updateStatus(UserStatus.IDLE);
 
-        Kissen.getInstance().getInternals().system().debug(Kissen.getInstance().getImplementation(Languages.class).getMessage("en_GB", new StartedSuccessful()).getText(), null, "discord");
+        Kissen.getInstance().getInternals().system().log(Kissen.getInstance().getImplementation(Languages.class).getMessage("en_GB", new StartedSuccessful()).getText(), null, "discord");
 
-        bot.updateActivity(ActivityType.PLAYING, "Tom Clancy's Rainbow Six Siege");
+        bot.updateActivity(ActivityType.PLAYING, "on KissenPvP");
         bot.updateStatus(UserStatus.ONLINE);
 
         bot.bulkOverwriteGlobalApplicationCommands(commands);
