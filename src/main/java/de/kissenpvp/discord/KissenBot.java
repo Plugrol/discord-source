@@ -17,7 +17,7 @@ package de.kissenpvp.discord;
 
 import de.kissenpvp.api.base.Kissen;
 import de.kissenpvp.api.config.Configuration;
-import de.kissenpvp.api.message.language.Languages;
+import de.kissenpvp.api.message.language.Language;
 import de.kissenpvp.discord.api.Bot;
 import de.kissenpvp.discord.api.command.SlashCommandDescription;
 import de.kissenpvp.discord.language.InvalidToken;
@@ -59,18 +59,18 @@ public class KissenBot implements Bot
 
         if (!isEnabled())
         {
-            Kissen.getInstance().getInternals().system().log(Kissen.getInstance().getImplementation(Languages.class).getMessage("en_GB", new InvalidToken()).getText());
+            Kissen.getInstance().getInternals().system().log(Kissen.getInstance().getImplementation(Language.class).getMessage("en_GB", new InvalidToken()).getText());
             return true;
         }
 
-        Kissen.getInstance().getInternals().system().debug(Kissen.getInstance().getImplementation(Languages.class).getMessage("en_GB", new PrepareStart()).getText(), null, "discord");
+        Kissen.getInstance().getInternals().system().debug(Kissen.getInstance().getImplementation(Language.class).getMessage("en_GB", new PrepareStart()).getText(), null, "discord");
 
         bot = new DiscordApiBuilder().setToken(Kissen.getInstance().getImplementation(Configuration.class).getSetting(Token.class)).setAllIntents().setWaitForServersOnStartup(true).setWaitForUsersOnStartup(true).login().join();
 
         bot.updateActivity(ActivityType.COMPETING, "faster startup times.");
         bot.updateStatus(UserStatus.IDLE);
 
-        Kissen.getInstance().getInternals().system().log(Kissen.getInstance().getImplementation(Languages.class).getMessage("en_GB", new StartedSuccessful()).getText(), null, "discord");
+        Kissen.getInstance().getInternals().system().log(Kissen.getInstance().getImplementation(Language.class).getMessage("en_GB", new StartedSuccessful()).getText(), null, "discord");
 
         bot.updateActivity(ActivityType.PLAYING, "on KissenPvP");
         bot.updateStatus(UserStatus.ONLINE);
