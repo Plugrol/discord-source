@@ -21,24 +21,26 @@ package de.kissenpvp.discord.commands;
 import de.kissenpvp.discord.api.command.DiscordCommand;
 import de.kissenpvp.discord.api.command.ExecutableDiscordCommand;
 import de.kissenpvp.discord.api.command.SlashCommand;
-import org.javacord.api.entity.message.component.ActionRow;
-import org.javacord.api.entity.message.component.Button;
+import org.javacord.api.entity.message.component.*;
 import org.javacord.api.interaction.SlashCommandOption;
+
+import java.util.List;
 
 /**
  * @author Taubsie
  * @since 1.0.0
  */
-@DiscordCommand(command = "hello", description = "A funny hello-message.")
-public class HelloCommand implements SlashCommand
+@DiscordCommand(command = "appeal", description = "Appeal your mute or ban on KissenPvP.de")
+public class AppealCommand implements SlashCommand
 {
     @Override public void execute(ExecutableDiscordCommand executableCommand)
     {
-        executableCommand.getSlashCommandCreateEvent().getSlashCommandInteraction().createImmediateResponder().setContent("Click the button below.").addComponents(ActionRow.of(Button.primary("click", "Click Me!"), Button.success("emoji", "emoji :)"))).respond();
+        executableCommand.getSlashCommandCreateEvent().getSlashCommandInteraction().respondWithModal("appeal", "Appeal",
+                ActionRow.of(SelectMenu.create("appealtype", "Type of appeal", List.of(SelectMenuOption.create("label", "Ban"), SelectMenuOption.create("label", "Mute")))));
     }
 
     @Override public SlashCommandOption[] getSlashCommandOptions()
     {
-        return new SlashCommandOption[] {};
+        return new SlashCommandOption[0];
     }
 }

@@ -23,16 +23,20 @@ import de.kissenpvp.discord.api.command.SlashCommandDescription;
 import de.kissenpvp.discord.language.InvalidToken;
 import de.kissenpvp.discord.language.PrepareStart;
 import de.kissenpvp.discord.language.StartedSuccessful;
+import de.kissenpvp.discord.settings.AppealChannelID;
 import de.kissenpvp.discord.settings.ServerID;
 import de.kissenpvp.discord.settings.Token;
 import lombok.Getter;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
+import org.javacord.api.entity.channel.Channel;
 import org.javacord.api.entity.server.Server;
+import org.javacord.api.entity.user.User;
 import org.javacord.api.entity.user.UserStatus;
 import org.javacord.api.interaction.SlashCommandBuilder;
 import org.javacord.api.listener.GloballyAttachableListener;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -164,5 +168,20 @@ public class KissenBot implements Bot
             commands = new ArrayList<>();
         }
         commands.add(slashCommandBuilder);
+    }
+
+    @Override public User getMember(long id)
+    {
+        return (getServer() == null) ? null : (getServer().getMemberById(id).orElse(null));
+    }
+
+    @Override public long getBotId()
+    {
+        return bot.getYourself().getId();
+    }
+
+    @Override @Nullable public Channel getAppealChannel()
+    {
+        return (getServer() != null) ? getServer().getForumChannelById(Kissen.getInstance().getImplementation(Configuration.class).getSetting(AppealChannelID.class)).orElse(null) : null;
     }
 }
