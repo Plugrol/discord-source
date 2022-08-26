@@ -36,7 +36,8 @@ public class AppealCommand implements SlashCommand
     @Override public void execute(ExecutableDiscordCommand executableCommand)
     {
         executableCommand.getSlashCommandCreateEvent().getSlashCommandInteraction().respondWithModal("appeal", "Appeal",
-                ActionRow.of(SelectMenu.create("appealtype", "Type of appeal", List.of(SelectMenuOption.create("label", "Ban"), SelectMenuOption.create("label", "Mute")))));
+                ActionRow.of(SelectMenu.create("appealtype", "Type of appeal",
+                        List.of(SelectMenuOption.create("label1", "Ban"), SelectMenuOption.create("label2", "Mute")))));
     }
 
     @Override public SlashCommandOption[] getSlashCommandOptions()
