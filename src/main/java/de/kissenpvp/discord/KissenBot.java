@@ -30,7 +30,7 @@ import lombok.Getter;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
-import org.javacord.api.entity.channel.Channel;
+import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.entity.user.UserStatus;
@@ -177,8 +177,8 @@ public class KissenBot implements Bot
         return bot.getYourself().getId();
     }
 
-    @Override @Nullable public Channel getAppealChannel()
+    @Override @Nullable public TextChannel getAppealChannel()
     {
-        return (getServer() != null) ? getServer().getForumChannelById(Kissen.getInstance().getImplementation(Configuration.class).getSetting(AppealChannelID.class)).orElse(null) : null;
+        return (getServer() != null) ? getServer().getTextChannelById(Kissen.getInstance().getImplementation(Configuration.class).getSetting(AppealChannelID.class)).orElse(null) : null;
     }
 }

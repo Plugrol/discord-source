@@ -20,7 +20,6 @@ package de.kissenpvp.discord.listener;
 
 import de.kissenpvp.api.base.Kissen;
 import de.kissenpvp.discord.api.Bot;
-import org.javacord.api.entity.channel.Channel;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.ModalSubmitEvent;
@@ -39,28 +38,26 @@ public class ModalListener implements ModalSubmitListener
         switch (modalSubmitEvent.getModalInteraction().getCustomId())
         {
             case "appeal_ban" -> {
-                Channel ac = Kissen.getInstance().getImplementation(Bot.class).getAppealChannel();
-                if(ac == null)
+                TextChannel appealChannel = Kissen.getInstance().getImplementation(Bot.class).getAppealChannel();
+                if(appealChannel == null)
                 {
                     modalSubmitEvent.getModalInteraction().createImmediateResponder().setContent("Our appeal-system is currently offline. Please get into contact with one of our administrators.\nSorry!").respond();
                     return;
                 }
 
-                TextChannel appealChannel = ac.asServerTextChannel().orElseThrow();
                 appealChannel.sendMessage(new EmbedBuilder().setColor(Color.RED).setTimestampToNow().setTitle("Ban-Appeal by " + modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_name").orElseThrow())
                         .addField("Why we should unban him", modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_reason").orElseThrow())
                         .addField("What he learned from it", modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_text").orElseThrow())
                         .setAuthor(modalSubmitEvent.getModalInteraction().getUser())).join();
             }
             case "appeal_mute" -> {
-                Channel ac = Kissen.getInstance().getImplementation(Bot.class).getAppealChannel();
-                if(ac == null)
+                TextChannel appealChannel = Kissen.getInstance().getImplementation(Bot.class).getAppealChannel();
+                if(appealChannel == null)
                 {
                     modalSubmitEvent.getModalInteraction().createImmediateResponder().setContent("Our appeal-system is currently offline. Please get into contact with one of our administrators.\nSorry!").respond();
                     return;
                 }
 
-                TextChannel appealChannel = ac.asServerTextChannel().orElseThrow();
                 appealChannel.sendMessage(new EmbedBuilder().setColor(Color.YELLOW).setTimestampToNow().setTitle("Mute-Appeal by " + modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_name").orElseThrow())
                         .addField("Why we should unban him", modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_reason").orElseThrow())
                         .addField("What he learned from it", modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_text").orElseThrow())

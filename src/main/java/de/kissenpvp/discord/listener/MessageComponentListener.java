@@ -45,13 +45,13 @@ public class MessageComponentListener implements MessageComponentCreateListener
                         selectMenuInteraction.respondWithModal("appeal_ban", "Appeal a ban on KissenPvP.de",
                                 ActionRow.of(TextInput.create(TextInputStyle.SHORT, "appeal_name", "Which account is this appeal for?")),
                                 ActionRow.of(TextInput.create(TextInputStyle.PARAGRAPH, "appeal_reason", "Tell us why we should unban you.")),
-                                ActionRow.of(TextInput.create(TextInputStyle.PARAGRAPH, "appeal_text", "What did you do wrong, what will you do differently?"))).join();
+                                ActionRow.of(TextInput.create(TextInputStyle.PARAGRAPH, "appeal_text", "What will you do differently?"))).join();
                     }
                     case "appeal_mute" -> {
                         selectMenuInteraction.respondWithModal("appeal_mute", "Appeal a mute on KissenPvP.de",
                                 ActionRow.of(TextInput.create(TextInputStyle.SHORT, "appeal_name", "Which account is this appeal for?")),
                                 ActionRow.of(TextInput.create(TextInputStyle.PARAGRAPH, "appeal_reason", "Tell us why we should unban you.")),
-                                ActionRow.of(TextInput.create(TextInputStyle.PARAGRAPH, "appeal_text", "What did you do wrong, what will you do differently?"))).join();
+                                ActionRow.of(TextInput.create(TextInputStyle.PARAGRAPH, "appeal_text", "What will you do differently?"))).join();
                     }
 
                     default -> Kissen.getInstance().getInternals().system().error("Value of SelectMenuInteraction is unknown. Please report this to a developer. Class: \"de.kissenpvp.discord.listener.MessageComponentListener\"", null, "discord");
