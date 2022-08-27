@@ -93,7 +93,7 @@ public class BanAssignListener implements EventListener<BanAssignEvent>
                     user.timeout(bot.getServer(), Duration.ofMillis(length), reason);
                 }
             }
-            default -> Kissen.getInstance().getInternals().system().log("BanType is unknown. Please report this to a developer. Class: \"de.kissenpvp.discord.listener.BanAssignListener\"");
+            default -> Kissen.getInstance().getInternals().system().error("BanType is unknown. Please report this to a developer. Class: \"de.kissenpvp.discord.listener.BanAssignListener\"", null, "discord");
         }
     }
 }

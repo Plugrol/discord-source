@@ -26,7 +26,7 @@ import org.javacord.api.listener.interaction.ModalSubmitListener;
  * @author Taubsie
  * @since 1.0.0
  */
-public class AppealListener implements ModalSubmitListener
+public class ModalListener implements ModalSubmitListener
 {
     @Override public void onModalSubmit(ModalSubmitEvent modalSubmitEvent)
     {
