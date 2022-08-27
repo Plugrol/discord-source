@@ -21,6 +21,7 @@ package de.kissenpvp.discord.listener;
 import de.kissenpvp.api.base.Kissen;
 import de.kissenpvp.discord.api.Bot;
 import org.javacord.api.entity.channel.TextChannel;
+import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.ModalSubmitEvent;
 import org.javacord.api.listener.interaction.ModalSubmitListener;
@@ -45,9 +46,14 @@ public class ModalListener implements ModalSubmitListener
                     return;
                 }
 
+                modalSubmitEvent.getModalInteraction().createImmediateResponder().setFlags(MessageFlag.EPHEMERAL).addEmbeds(new EmbedBuilder().setColor(Color.RED).setTimestampToNow().setTitle("Ban-Appeal by " + modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_name").orElseThrow() + " sent! See your information below.")
+                                .addField("Why we should unban you", modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_reason").orElseThrow())
+                                .addField("What you learned from it", modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_text").orElseThrow())
+                                .setAuthor(modalSubmitEvent.getModalInteraction().getUser())).respond().join();
+
                 appealChannel.sendMessage(new EmbedBuilder().setColor(Color.RED).setTimestampToNow().setTitle("Ban-Appeal by " + modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_name").orElseThrow())
-                        .addField("Why we should unban him", modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_reason").orElseThrow())
-                        .addField("What he learned from it", modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_text").orElseThrow())
+                        .addField("Why we should unban them", modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_reason").orElseThrow())
+                        .addField("What they learned from it", modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_text").orElseThrow())
                         .setAuthor(modalSubmitEvent.getModalInteraction().getUser())).join();
             }
             case "appeal_mute" -> {
@@ -58,9 +64,14 @@ public class ModalListener implements ModalSubmitListener
                     return;
                 }
 
+                modalSubmitEvent.getModalInteraction().createImmediateResponder().setFlags(MessageFlag.EPHEMERAL).addEmbeds(new EmbedBuilder().setColor(Color.YELLOW).setTimestampToNow().setTitle("Mute-Appeal by " + modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_name").orElseThrow() + " sent! See your information below.")
+                        .addField("Why we should unban you", modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_reason").orElseThrow())
+                        .addField("What you learned from it", modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_text").orElseThrow())
+                        .setAuthor(modalSubmitEvent.getModalInteraction().getUser())).respond().join();
+
                 appealChannel.sendMessage(new EmbedBuilder().setColor(Color.YELLOW).setTimestampToNow().setTitle("Mute-Appeal by " + modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_name").orElseThrow())
-                        .addField("Why we should unban him", modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_reason").orElseThrow())
-                        .addField("What he learned from it", modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_text").orElseThrow())
+                        .addField("Why we should unban them", modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_reason").orElseThrow())
+                        .addField("What they learned from it", modalSubmitEvent.getModalInteraction().getTextInputValueByCustomId("appeal_text").orElseThrow())
                         .setAuthor(modalSubmitEvent.getModalInteraction().getUser())).join();
             }
 
