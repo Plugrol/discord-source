@@ -18,6 +18,7 @@ package de.kissenpvp.discord;
 import de.kissenpvp.api.base.Kissen;
 import de.kissenpvp.api.config.Configuration;
 import de.kissenpvp.api.message.language.Language;
+import de.kissenpvp.api.message.settings.DefaultLanguage;
 import de.kissenpvp.discord.api.Bot;
 import de.kissenpvp.discord.api.command.SlashCommandDescription;
 import de.kissenpvp.discord.language.InvalidToken;
@@ -63,18 +64,18 @@ public class KissenBot implements Bot
 
         if (!isEnabled())
         {
-            Kissen.getInstance().getInternals().system().log(Kissen.getInstance().getImplementation(Language.class).getMessage("en_GB", new InvalidToken()).getText());
+            Kissen.getInstance().getInternals().system().log(Kissen.getInstance().getImplementation(Language.class).getMessage(Kissen.getInstance().getImplementation(Configuration.class).getSetting(DefaultLanguage.class), new InvalidToken()).getText());
             return true;
         }
 
-        Kissen.getInstance().getInternals().system().debug(Kissen.getInstance().getImplementation(Language.class).getMessage("en_GB", new PrepareStart()).getText(), null, "discord");
+        Kissen.getInstance().getInternals().system().debug(Kissen.getInstance().getImplementation(Language.class).getMessage(Kissen.getInstance().getImplementation(Configuration.class).getSetting(DefaultLanguage.class), new PrepareStart()).getText(), null);
 
         bot = new DiscordApiBuilder().setToken(Kissen.getInstance().getImplementation(Configuration.class).getSetting(Token.class)).setAllIntents().setWaitForServersOnStartup(true).setWaitForUsersOnStartup(true).login().join();
 
         bot.updateActivity(ActivityType.COMPETING, "faster startup times.");
         bot.updateStatus(UserStatus.IDLE);
 
-        Kissen.getInstance().getInternals().system().log(Kissen.getInstance().getImplementation(Language.class).getMessage("en_GB", new StartedSuccessful()).getText(), null, "discord");
+        Kissen.getInstance().getInternals().system().log(Kissen.getInstance().getImplementation(Language.class).getMessage(Kissen.getInstance().getImplementation(Configuration.class).getSetting(DefaultLanguage.class), new StartedSuccessful()).getText());
 
         bot.updateActivity(ActivityType.PLAYING, "on KissenPvP");
         bot.updateStatus(UserStatus.ONLINE);
@@ -154,6 +155,8 @@ public class KissenBot implements Bot
         {
             slashCommandDescriptions = new ArrayList<>();
         }
+
+        Kissen.getInstance().getInternals().system().debug("Adding command '" + slashCommandDescription.getCommandInfo().command() + "' to discord bot.", null, "discord", "command");
 
         slashCommandDescriptions.add(slashCommandDescription);
 
