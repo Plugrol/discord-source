@@ -120,8 +120,7 @@ public class KissenBot implements Bot
 
     @Override public boolean isEnabled()
     {
-        return !Objects.equals(Kissen.getInstance().getImplementation(Configuration.class).getSetting(Token.class),
-                new Token().getDefault());
+        return !Objects.equals(Kissen.getInstance().getImplementation(Configuration.class).getSetting(Token.class), new Token().getDefault());
     }
 
     private long getServerID()
@@ -158,16 +157,14 @@ public class KissenBot implements Bot
 
         slashCommandDescriptions.add(slashCommandDescription);
 
-        SlashCommandBuilder slashCommandBuilder =
-                org.javacord.api.interaction.SlashCommand.with(slashCommandDescription.getCommandInfo().command(),
-                        slashCommandDescription.getCommandInfo().description());
+        SlashCommandBuilder slashCommandBuilder = org.javacord.api.interaction.SlashCommand.with(slashCommandDescription.getCommandInfo().command(),
+                slashCommandDescription.getCommandInfo().description());
         Arrays.stream(slashCommandDescription.getExecutable().getSlashCommandOptions()).forEach(slashCommandBuilder::addOption);
 
         if (commands == null)
         {
             commands = new ArrayList<>();
-        }
-        commands.add(slashCommandBuilder);
+        } commands.add(slashCommandBuilder);
     }
 
     @Override public User getMember(long id)
