@@ -36,18 +36,22 @@ public class MessageComponentListener implements MessageComponentCreateListener
     {
         switch (messageComponentCreateEvent.getMessageComponentInteraction().getCustomId())
         {
-            case "appealtype" -> {
+            case "appeal_type" -> {
                 SelectMenuInteraction selectMenuInteraction = messageComponentCreateEvent.getMessageComponentInteraction().asSelectMenuInteraction().orElseThrow();
 
                 switch (selectMenuInteraction.getChosenOptions().get(0).getValue())
                 {
-                    case "appealban" -> {
-                        selectMenuInteraction.respondWithModal("appealban", "Appeal a ban on KissenPvP.de",
-                                ActionRow.of(TextInput.create(TextInputStyle.SHORT, "appealtext", "Tell us why we should unban you.")));
+                    case "appeal_ban" -> {
+                        selectMenuInteraction.respondWithModal("appeal_ban", "Appeal a ban on KissenPvP.de",
+                                ActionRow.of(TextInput.create(TextInputStyle.SHORT, "appeal_name", "Which account is this appeal for?")),
+                                ActionRow.of(TextInput.create(TextInputStyle.PARAGRAPH, "appeal_reason", "Tell us why we should unban you.")),
+                                ActionRow.of(TextInput.create(TextInputStyle.PARAGRAPH, "appeal_text", "What did you do wrong, what will you do differently?"))).join();
                     }
-                    case "appealmute" -> {
-                        selectMenuInteraction.respondWithModal("appealmute", "Appeal a mute on KissenPvP.de",
-                                ActionRow.of(TextInput.create(TextInputStyle.SHORT, "appealtext", "Tell us why we should unban you.")));
+                    case "appeal_mute" -> {
+                        selectMenuInteraction.respondWithModal("appeal_mute", "Appeal a mute on KissenPvP.de",
+                                ActionRow.of(TextInput.create(TextInputStyle.SHORT, "appeal_name", "Which account is this appeal for?")),
+                                ActionRow.of(TextInput.create(TextInputStyle.PARAGRAPH, "appeal_reason", "Tell us why we should unban you.")),
+                                ActionRow.of(TextInput.create(TextInputStyle.PARAGRAPH, "appeal_text", "What did you do wrong, what will you do differently?"))).join();
                     }
 
                     default -> Kissen.getInstance().getInternals().system().error("Value of SelectMenuInteraction is unknown. Please report this to a developer. Class: \"de.kissenpvp.discord.listener.MessageComponentListener\"", null, "discord");
