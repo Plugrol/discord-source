@@ -51,10 +51,10 @@ public class BanAssignListener implements EventListener<BanAssignEvent>
                 DiscordUser discordUser =
                         Kissen.getInstance().getImplementation(de.kissenpvp.api.user.User.class).getUser(UUID.fromString(resultSet.getString("uuid").substring("user".length()))).getExternalUser(DiscordUser.class);
                 Bot bot = Kissen.getInstance().getImplementation(Bot.class); if (discordUser.isDiscordVerified() && bot.getServer() != null && bot.getMember(discordUser.getDiscordID()) != null)
-            {
+                {
                 punish(banAssignEvent.getBanNode().banIDNode().banType(), banAssignEvent.getBanNode().reason(), banAssignEvent.getBanNode().banner(),
                         banAssignEvent.getBanNode().validationNode().timeNode().length(), bot.getMember(discordUser.getDiscordID()), bot);
-            }
+                }
             }
         }
         catch (SQLException e)
@@ -87,7 +87,7 @@ public class BanAssignListener implements EventListener<BanAssignEvent>
                 {
                     user.timeout(bot.getServer(), Duration.ofMillis(length), reason);
                 }
-            } default -> Kissen.getInstance().getInternals().system().log("BanType is unknown. Please report this to a developer. Class: \"de.kissenpvp.discord.listener.BanAssignListener\"");
+            } default -> Kissen.getInstance().getInternals().system().log("BanType is unknown. Please report this to a developer. Class: \"de.kissenpvp.discord.listener.BanAssignListener\"", null, "discord");
         }
     }
 }
