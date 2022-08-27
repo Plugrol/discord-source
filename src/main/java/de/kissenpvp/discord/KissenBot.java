@@ -100,7 +100,7 @@ public class KissenBot implements Bot
 
         connected = false;
 
-        bot.disconnect();
+        bot.disconnect().join();
     }
 
     @Override public void restart()
