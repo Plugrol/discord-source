@@ -16,6 +16,7 @@
 package de.kissenpvp.discord;
 
 import de.kissenpvp.api.base.Kissen;
+import de.kissenpvp.api.base.system.SystemInterface;
 import de.kissenpvp.api.config.Configuration;
 import de.kissenpvp.api.message.language.Language;
 import de.kissenpvp.api.message.settings.DefaultLanguage;
@@ -62,28 +63,28 @@ public class KissenBot implements Bot
 
         connected = false;
 
+        Language language = Kissen.getInstance().getImplementation(Language.class); SystemInterface systemInterface = Kissen.getInstance().getInternals().system();
+
         if (!isEnabled())
         {
-            Kissen.getInstance().getInternals().system().log(Kissen.getInstance().getImplementation(Language.class).getMessage(Kissen.getInstance().getImplementation(Configuration.class).getSetting(DefaultLanguage.class), new InvalidToken()).getText());
-            return true;
+            systemInterface.log(language.getMessage(Kissen.getInstance().getImplementation(Configuration.class).getSetting(DefaultLanguage.class), new InvalidToken()).getText()); return true;
         }
 
-        Kissen.getInstance().getInternals().system().debug(Kissen.getInstance().getImplementation(Language.class).getMessage(Kissen.getInstance().getImplementation(Configuration.class).getSetting(DefaultLanguage.class), new PrepareStart()).getText(), null);
+        systemInterface.debug(language.getMessage(Kissen.getInstance().getImplementation(Configuration.class).getSetting(DefaultLanguage.class), new PrepareStart()).getText(), null);
 
         bot = new DiscordApiBuilder().setToken(Kissen.getInstance().getImplementation(Configuration.class).getSetting(Token.class)).setAllIntents().setWaitForServersOnStartup(true).setWaitForUsersOnStartup(true).login().join();
 
         bot.updateActivity(ActivityType.COMPETING, "faster startup times.");
         bot.updateStatus(UserStatus.IDLE);
 
-        Kissen.getInstance().getInternals().system().log(Kissen.getInstance().getImplementation(Language.class).getMessage(Kissen.getInstance().getImplementation(Configuration.class).getSetting(DefaultLanguage.class), new StartedSuccessful()).getText());
+        systemInterface.log(language.getMessage(Kissen.getInstance().getImplementation(Configuration.class).getSetting(DefaultLanguage.class), new StartedSuccessful()).getText());
 
         bot.updateActivity(ActivityType.PLAYING, "on KissenPvP");
         bot.updateStatus(UserStatus.ONLINE);
 
-        bot.bulkOverwriteGlobalApplicationCommands(commands);
+        bot.bulkOverwriteGlobalApplicationCommands(commands).join();
 
         connected = true;
-
         return true;
     }
 
@@ -156,13 +157,11 @@ public class KissenBot implements Bot
             slashCommandDescriptions = new ArrayList<>();
         }
 
-        Kissen.getInstance().getInternals().system().debug("Adding command '" + slashCommandDescription.getCommandInfo().command() + "' to discord bot.", null, "discord", "command");
+        Kissen.getInstance().getInternals().system().debug("Register command '" + slashCommandDescription.getCommandInfo().command() + "'.", null, "discord", "command");
 
         slashCommandDescriptions.add(slashCommandDescription);
 
-        SlashCommandBuilder slashCommandBuilder = org.javacord.api.interaction.SlashCommand.with(slashCommandDescription.getCommandInfo().command(),
-                slashCommandDescription.getCommandInfo().description());
-        Arrays.stream(slashCommandDescription.getExecutable().getSlashCommandOptions()).forEach(slashCommandBuilder::addOption);
+        SlashCommandBuilder slashCommandBuilder = org.javacord.api.interaction.SlashCommand.with(slashCommandDescription.getCommandInfo().command(), slashCommandDescription.getCommandInfo().description()); Arrays.stream(slashCommandDescription.getExecutable().getSlashCommandOptions()).forEach(slashCommandBuilder::addOption);
 
         if (commands == null)
         {
