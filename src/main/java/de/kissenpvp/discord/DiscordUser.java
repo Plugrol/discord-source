@@ -33,15 +33,16 @@ import java.util.Map;
     @Override public void insertInfo(Map<String, String> map)
     {
 
-        map.put("Discord Verified", String.valueOf(isDiscordVerified())); if (isDiscordVerified())
-    {
-        map.put("DiscordID", getUser().getMeta().get("discord_id", String.class));
-    }
+        map.put("Discord Verified", String.valueOf(isDiscordVerified()));
+        if (isDiscordVerified())
+        {
+            map.put("DiscordID", getUser().get("discord_id", String.class));
+        }
     }
 
     public Long getDiscordID()
     {
-        return getUser().getMeta().getOrElse("discord_id", null);
+        return getUser().getOrElse("discord_id", null);
     }
 
     public boolean isDiscordVerified()

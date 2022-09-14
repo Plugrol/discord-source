@@ -43,17 +43,17 @@ public class BanAssignListener implements EventListener<BanAssignEvent>
     {
         try
         {
-            PreparedStatement preparedStatement =
-                    Kissen.getInstance().getImplementation(SQL.class).getPreparedStatement("SELECT uuid FROM " + Kissen.getInstance().getPublicMeta().getTable() + " " + "WHERE identifier = ? AND " + "value = ?;");
-            preparedStatement.setString(1, "total_id"); preparedStatement.setString(2, banAssignEvent.getBanNode().totalID().toString()); ResultSet resultSet = preparedStatement.executeQuery();
+            PreparedStatement preparedStatement = Kissen.getInstance().getImplementation(SQL.class).getPreparedStatement("SELECT uuid FROM " + Kissen.getInstance().getPublicMeta().getTable() + " " + "WHERE identifier = ? AND " + "value = ?;");
+            preparedStatement.setString(1, "total_id");
+            preparedStatement.setString(2, banAssignEvent.getBanNode().totalID().toString());
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next())
             {
-                DiscordUser discordUser =
-                        Kissen.getInstance().getImplementation(de.kissenpvp.api.user.User.class).getUser(UUID.fromString(resultSet.getString("uuid").substring("user".length()))).getExternalUser(DiscordUser.class);
-                Bot bot = Kissen.getInstance().getImplementation(Bot.class); if (discordUser.isDiscordVerified() && bot.getServer() != null && bot.getMember(discordUser.getDiscordID()) != null)
+                DiscordUser discordUser = Kissen.getInstance().getImplementation(de.kissenpvp.api.user.User.class).getUser(UUID.fromString(resultSet.getString("uuid").substring("user".length()))).getExternalUser(DiscordUser.class);
+                Bot bot = Kissen.getInstance().getImplementation(Bot.class);
+                if (discordUser.isDiscordVerified() && bot.getServer() != null && bot.getMember(discordUser.getDiscordID()) != null)
                 {
-                punish(banAssignEvent.getBanNode().banIDNode().banType(), banAssignEvent.getBanNode().reason(), banAssignEvent.getBanNode().banner(),
-                        banAssignEvent.getBanNode().validationNode().timeNode().length(), bot.getMember(discordUser.getDiscordID()), bot);
+                    punish(banAssignEvent.getBanNode().banIDNode().banType().getValue(), banAssignEvent.getBanNode().reason().getValue(), banAssignEvent.getBanNode().banner(), banAssignEvent.getBanNode().validationNode().timeNode().length(), bot.getMember(discordUser.getDiscordID()), bot);
                 }
             }
         }
@@ -69,16 +69,13 @@ public class BanAssignListener implements EventListener<BanAssignEvent>
         {
             case MUTE ->
             {
-                user.openPrivateChannel().join().sendMessage(new EmbedBuilder().setTimestampToNow().setTitle("You got muted on KissenPvP.de").addField("Duration", (length == -1) ? "permanent" :
-                        Duration.ofMillis(length).toString()).addField("Reason", (reason == null) ? "none" : reason).addField("Banner", (banner == null) ? "CONSOLE" : banner).setAuthor(bot.getMember(bot.getBotId())).setColor(Color.RED).setFooter("Appeal this mute using \"/appeal\"."));
+                user.openPrivateChannel().join().sendMessage(new EmbedBuilder().setTimestampToNow().setTitle("You got muted on KissenPvP.de").addField("Duration", (length == -1) ? "permanent" : Duration.ofMillis(length).toString()).addField("Reason", (reason == null) ? "none" : reason).addField("Banner", (banner == null) ? "CONSOLE" : banner).setAuthor(bot.getMember(bot.getBotId())).setColor(Color.RED).setFooter("Appeal this mute using \"/appeal\"."));
                 user.timeout(bot.getServer(), (length == -1) ? Duration.ofDays(365L) : Duration.ofMillis(length), reason);
-            } case KICK ->
-                user.openPrivateChannel().join().sendMessage(new EmbedBuilder().setTimestampToNow().setTitle("You got kicked from KissenPvP.de").addField("Reason", (reason == null) ? "none" :
-                        reason).addField("Banner", (banner == null) ? "CONSOLE" : banner).setAuthor(bot.getMember(bot.getBotId())).setColor(Color.RED));
+            }
+            case KICK -> user.openPrivateChannel().join().sendMessage(new EmbedBuilder().setTimestampToNow().setTitle("You got kicked from KissenPvP.de").addField("Reason", (reason == null) ? "none" : reason).addField("Banner", (banner == null) ? "CONSOLE" : banner).setAuthor(bot.getMember(bot.getBotId())).setColor(Color.RED));
             case BAN ->
             {
-                user.openPrivateChannel().join().sendMessage(new EmbedBuilder().setTimestampToNow().setTitle("You got banned from KissenPvP.de").addField("Duration", (length == -1) ? "permanent" :
-                        Duration.ofMillis(length).toString()).addField("Reason", (reason == null) ? "none" : reason).addField("Banner", (banner == null) ? "CONSOLE" : banner).setAuthor(bot.getMember(bot.getBotId())).setColor(Color.RED).setFooter("Appeal this ban using \"/appeal\"."));
+                user.openPrivateChannel().join().sendMessage(new EmbedBuilder().setTimestampToNow().setTitle("You got banned from KissenPvP.de").addField("Duration", (length == -1) ? "permanent" : Duration.ofMillis(length).toString()).addField("Reason", (reason == null) ? "none" : reason).addField("Banner", (banner == null) ? "CONSOLE" : banner).setAuthor(bot.getMember(bot.getBotId())).setColor(Color.RED).setFooter("Appeal this ban using \"/appeal\"."));
                 if (length == -1)
                 {
                     Objects.requireNonNull(bot.getServer()).banUser(user, 0, reason).join();
@@ -87,7 +84,8 @@ public class BanAssignListener implements EventListener<BanAssignEvent>
                 {
                     user.timeout(bot.getServer(), Duration.ofMillis(length), reason);
                 }
-            } default -> Kissen.getInstance().getInternals().system().log("BanType is unknown. Please report this to a developer. Class: \"de.kissenpvp.discord.listener.BanAssignListener\"", null, "discord");
+            }
+            default -> Kissen.getInstance().getInternals().system().log("BanType is unknown. Please report this to a developer. Class: \"de.kissenpvp.discord.listener.BanAssignListener\"", null, "discord");
         }
     }
 }
