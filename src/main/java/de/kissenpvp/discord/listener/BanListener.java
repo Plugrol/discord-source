@@ -16,7 +16,7 @@
 package de.kissenpvp.discord.listener;
 
 import de.kissenpvp.api.ban.BanType;
-import de.kissenpvp.api.ban.event.BanAssignEvent;
+import de.kissenpvp.api.ban.event.BanSetEvent;
 import de.kissenpvp.api.base.Kissen;
 import de.kissenpvp.api.database.connection.SQL;
 import de.kissenpvp.api.event.EventListener;
@@ -37,15 +37,15 @@ import java.util.UUID;
  * @author Taubsie
  * @since 1.0.0
  */
-public class BanAssignListener implements EventListener<BanAssignEvent>
+public class BanListener implements EventListener<BanSetEvent>
 {
-    @Override public void call(BanAssignEvent banAssignEvent)
+    @Override public void call(BanSetEvent banAssignEvent)
     {
         try
         {
             PreparedStatement preparedStatement = Kissen.getInstance().getImplementation(SQL.class).getPreparedStatement("SELECT uuid FROM " + Kissen.getInstance().getPublicMeta().getTable() + " " + "WHERE identifier = ? AND " + "value = ?;");
             preparedStatement.setString(1, "total_id");
-            preparedStatement.setString(2, banAssignEvent.getBanNode().totalID().toString());
+            preparedStatement.setString(2, banAssignEvent.getBan().totalID().toString());
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next())
             {
@@ -53,7 +53,7 @@ public class BanAssignListener implements EventListener<BanAssignEvent>
                 Bot bot = Kissen.getInstance().getImplementation(Bot.class);
                 if (discordUser.isDiscordVerified() && bot.getServer() != null && bot.getMember(discordUser.getDiscordID()) != null)
                 {
-                    punish(banAssignEvent.getBanNode().banIDNode().banType().getValue(), banAssignEvent.getBanNode().reason().getValue(), banAssignEvent.getBanNode().banner(), banAssignEvent.getBanNode().validationNode().timeNode().length(), bot.getMember(discordUser.getDiscordID()), bot);
+                    punish(banAssignEvent.getBan().banIDNode().banType().getValue(), banAssignEvent.getBan().reason().getValue(), banAssignEvent.getBan().banner(), banAssignEvent.getBan().validationNode().timeNode().length(), bot.getMember(discordUser.getDiscordID()), bot);
                 }
             }
         }
